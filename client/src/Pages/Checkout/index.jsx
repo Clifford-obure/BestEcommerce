@@ -9,6 +9,7 @@ import { deleteData, fetchDataFromApi, postData } from "../../utils/api";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { usePaystackPayment } from "react-paystack";
 
 const VITE_APP_RAZORPAY_KEY_ID = import.meta.env.VITE_APP_RAZORPAY_KEY_ID;
 const VITE_APP_RAZORPAY_KEY_SECRET = import.meta.env
@@ -17,6 +18,25 @@ const VITE_APP_RAZORPAY_KEY_SECRET = import.meta.env
 const VITE_APP_PAYPAL_CLIENT_ID = import.meta.env.VITE_APP_PAYPAL_CLIENT_ID;
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
+const config = {
+  reference: new Date().getTime().toString(),
+  email: "user@example.com",
+  amount: 20000,
+  publicKey: "pk_test_dsdfghuytfd2345678gvxxxxxxxxxx",
+};
+
+// you can call this function anything
+const onSuccess = (reference) => {
+  // Implementation for whatever you want to do with reference and after success call.
+  console.log(reference);
+};
+
+// you can call this function anything
+const onClose = () => {
+  // implementation for  whatever you want to do when the Paystack dialog closed.
+  console.log("closed");
+};
+
 const Checkout = () => {
   const [userData, setUserData] = useState(null);
   const [isChecked, setIsChecked] = useState(0);
@@ -24,6 +44,7 @@ const Checkout = () => {
   const [totalAmount, setTotalAmount] = useState();
   const [isLoading, setIsloading] = useState(false);
   const context = useContext(MyContext);
+  const initializePayment = usePaystackPayment(config);
 
   const history = useNavigate();
 
@@ -412,13 +433,12 @@ const Checkout = () => {
               </div>
 
               <div className="flex items-center flex-col gap-3 mb-2">
-                <Button
+                {/* <Button
                   type="submit"
                   className="btn-org btn-lg w-full flex gap-2 items-center"
                 >
                   <BsFillBagCheckFill className="text-[20px]" /> Checkout
-                </Button>
-
+                </Button> */}
                 <div
                   id="paypal-button-container"
                   className={`${
